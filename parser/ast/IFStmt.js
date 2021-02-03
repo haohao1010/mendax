@@ -1,4 +1,6 @@
 const ASTNodeTypes = require("./ASTNodeTypes")
+const { Stmt } = require("./index")
+
 class IfStmt extends Stmt {
     constructor() {
         super(ASTNodeTypes.IF_STMT, "if")
@@ -28,42 +30,43 @@ class IfStmt extends Stmt {
         return null
     }
 }
+
 module.exports = IfStmt
 
-// const { Expr, Block } = require("./index")
+const { Expr, Block } = require("./index")
 
-// // IfStmt -> if(Expr) { Block } Tail
-// IfStmt.parse = (it) => {
-//     const lexeme = it.nextMatch("if")
-//     it.nextMatch("(")
-//     const ifStmt = new IfStmt()
-//     ifStmt.setLexeme(lexeme)
-//     const expr = Expr.parse(it)
-//     ifStmt.addChild(expr)
-//     it.nextMatch(")")
-//     const block = Block.parse(it)
-//     ifStmt.addChild(block)
+IfStmt.parse = (it) => {
+    const lexeme = it.nextMatch("if")
+    it.nextMatch("(")
+    const ifStmt = new IfStmt()
+    ifStmt.setLexeme(lexeme)
+    const expr = Expr.parse(it)
+    ifStmt.addChild(expr)
+    it.nextMatch(")")
+    const block = Block.parse(it)
+    ifStmt.addChild(block)
+    const tail = IfStmt.parseTail(it)
 
-//     const tail = IfStmt.parseTail(it)
-//     if (tail != null) {
-//         ifStmt.addChild(tail)
-//     }
-//     return ifStmt
-// }
+    if (tail != null) {
+        ifStmt.addChild(tail)
+    }
 
-// // Tail -> else { Block } | else IFStmt | ε
-// IfStmt.parseTail = (it) => {
-//     if (!it.hasNext() || it.peek().getValue() !== "else") {
-//         return null
-//     }
-//     it.nextMatch("else")
-//     const lookahead = it.peek()
+    return ifStmt
+}
 
-//     if (lookahead.getValue() === "{") {
-//         return Block.parse(it)
-//     } else if (lookahead.getValue() === "if") {
-//         return IfStmt.parse(it)
-//     } else {
-//         return null
-//     }
-// }
+IfStmt.parseTail = (it) => {
+    if (!it.hasNext() || it.peek().getValue() !== "else") {
+        return null
+    }
+
+    it.nextMatch("else")
+    const lookahead = it.peek()
+    
+    if (lookahead.getValue() === "{") {
+        return Block.parse(it)
+    } else if (lookahead.getValue() === "if") {
+        return IfStmt.parse(it)
+    } else {
+        return null
+    }
+}

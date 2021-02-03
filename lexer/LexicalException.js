@@ -1,4 +1,3 @@
-// Exception information handling
 class LexicalException extends Error {
     constructor(msg) {
         super(msg)

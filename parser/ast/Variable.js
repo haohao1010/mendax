@@ -1,19 +1,20 @@
 const ASTNodeTypes = require("./ASTNodeTypes")
+const { Factor } = require("./index")
 
 class Variable extends Factor {
-    constructor(parent, it) {
-        super(parent, it)
-        // this.type = ASTNodeTypes.VARIABLE
-        // this.typeLexeme = null
+    constructor(token) {
+        super(token)
+        this.type = ASTNodeTypes.VARIABLE
+        this.typeLexeme = null
     }
 
-    // setTypeLexeme(lexeme) {
-    //     this.typeLexeme = lexeme
-    // }
+    setTypeLexeme(lexeme) {
+        this.typeLexeme = lexeme
+    }
 
-    // getTypeLexeme() {
-    //     return this.typeLexeme
-    // }
+    getTypeLexeme() {
+        return this.typeLexeme
+    }
 }
 
 module.exports = Variable

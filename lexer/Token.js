@@ -1,8 +1,8 @@
 const TokenType = require("./TokenType")
-const AlphabetHelper = require("./AlphabetHepler")
+const AlphabetHelper = require("./AlphabetHelper")
 const LexicalException = require("./LexicalException")
 
-const keywords = new Set([
+const Keywords = new Set([
     "var",
     "if",
     "else",
@@ -11,6 +11,11 @@ const keywords = new Set([
     "break",
     "func",
     "return",
+    "int",
+    "float",
+    "bool",
+    "void",
+    "string",
 ])
 
 class Token {
@@ -27,8 +32,7 @@ class Token {
         return this._value
     }
 
-    // Determine if a variable is of type
-    isVarible() {
+    isVariable() {
         return this._type == TokenType.VARIABLE
     }
 
@@ -46,7 +50,6 @@ class Token {
         )
     }
 
-    // Determine if it is a value type
     isScalar() {
         return (
             this._type == TokenType.INTEGER ||
@@ -63,8 +66,6 @@ class Token {
     static makeVarOrKeyword(it) {
         let s = ""
 
-        // At this point, the determination of the common features contained in the variables
-        // and keywords is completed
         while (it.hasNext()) {
             const c = it.peek()
             if (AlphabetHelper.isLiteral(c)) {
@@ -75,7 +76,7 @@ class Token {
             it.next()
         }
 
-        if (keywords.has(s)) {
+        if (Keywords.has(s)) {
             return new Token(TokenType.KEYWORD, s)
         }
 
@@ -86,14 +87,12 @@ class Token {
         return new Token(TokenType.VARIABLE, s)
     }
 
-    // state machine
     static makeString(it) {
         let s = ""
         let state = 0
 
         while (it.hasNext()) {
             let c = it.next()
-
             switch (state) {
                 case 0:
                     if (c == '"') {
@@ -128,7 +127,6 @@ class Token {
         let state = 0
         while (it.hasNext()) {
             let lookahead = it.next()
-
             switch (state) {
                 case 0:
                     switch (lookahead) {
@@ -293,10 +291,8 @@ class Token {
     static makeNumber(it) {
         let state = 0
         let s = ""
-
         while (it.hasNext()) {
             let lookahead = it.peek()
-
             switch (state) {
                 case 0:
                     if (lookahead == "0") {
@@ -309,15 +305,19 @@ class Token {
                         state = 5
                     }
                     break
+
                 case 1:
                     if (lookahead == "0") {
                         state = 1
                     } else if (lookahead == ".") {
                         state = 4
+                    } else if (AlphabetHelper.isNumber(lookahead)) {
+                        state = 2
                     } else {
                         return new Token(TokenType.INTEGER, s)
                     }
                     break
+
                 case 2:
                     if (AlphabetHelper.isNumber(lookahead)) {
                         state = 2
@@ -327,6 +327,7 @@ class Token {
                         return new Token(TokenType.INTEGER, s)
                     }
                     break
+
                 case 3:
                     if (AlphabetHelper.isNumber(lookahead)) {
                         state = 2
@@ -336,6 +337,7 @@ class Token {
                         throw LexicalException.fromChar(lookahead)
                     }
                     break
+
                 case 4:
                     if (lookahead == ".") {
                         throw LexicalException.fromChar(lookahead)
@@ -345,6 +347,7 @@ class Token {
                         return new Token(TokenType.FLOAT, s)
                     }
                     break
+
                 case 5:
                     if (AlphabetHelper.isNumber(lookahead)) {
                         state = 20
@@ -352,6 +355,7 @@ class Token {
                         throw LexicalException.fromChar(lookahead)
                     }
                     break
+
                 case 20:
                     if (AlphabetHelper.isNumber(lookahead)) {
                         state = 20
@@ -364,7 +368,7 @@ class Token {
             s += lookahead
             it.next()
         }
-        throw new LexicalException("Unexpected Error")
+        throw new LexicalException("Unexpected error")
     }
 }
 

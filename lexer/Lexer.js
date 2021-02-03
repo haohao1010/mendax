@@ -1,30 +1,27 @@
-const PeekInterator = require("../commom/PeekIterator")
+const PeekIterator = require("../common/PeekIterator")
 const Token = require("./Token")
 const TokenType = require("./TokenType")
-const AlphabetHelper = require("./AlphabetHepler")
+const AlphabetHelper = require("./AlphabetHelper")
 const LexicalException = require("./LexicalException")
+const arrayToGenerator = require("../common/arrayToGenerator")
+// const PeekTokenIterator = require("../parser/util/PeekTokenIterator")
+const fs = require("fs")
 
-// Main entrance
 class Lexer {
     analyse(source) {
-        // source: iterator
         const tokens = []
-        const it = new PeekInterator(source, "\0")
+        const it = new PeekIterator(source, "\0")
 
         while (it.hasNext()) {
             let c = it.next()
-
             if (c == "\0") {
                 break
             }
-
             let lookahead = it.peek()
-
-            if (c == " " || c == "\n") {
-                continue // Skip these characters
+            if (c == " " || c == "\n" || c == "\r") {
+                continue
             }
-
-            // Extract Notes
+            
             if (c == "/") {
                 if (lookahead == "/") {
                     while (it.hasNext() && (c = it.next()) != "\n");
@@ -40,7 +37,7 @@ class Lexer {
                         }
                     }
                     if (!valid) {
-                        throw new LexicalException("comment is not matched")
+                        throw new LexicalException("comment not matched")
                     }
                     continue
                 }
@@ -83,10 +80,15 @@ class Lexer {
                 tokens.push(Token.makeOp(it))
                 continue
             }
-
-            throw new LexicalException.fromChar(c)
+            throw LexicalException.fromChar(c)
         }
         return tokens
+    }
+
+    static fromFile(src) {
+        const content = fs.readFileSync(src, "utf-8")
+        const lexer = new Lexer()
+        return arrayToGenerator(lexer.analyse(arrayToGenerator(content)))
     }
 }
 

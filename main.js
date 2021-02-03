@@ -1,15 +1,19 @@
-// Test entry procedure
+const Token = require("./src/lexer/Token")
+const Lexer = require("./src/lexer/Lexer")
+const TokenType = require("./src/lexer/TokenType")
+const arrayToGenerator = require("./src/common/arrayToGenerator")
 
-const Token = require("./lexer/Token")
-const arrayToGenerator = require("./commom/arrayToGenerator")
-const PeekIterator = require("./commom/PeekIterator")
+function assertToken(token) {
+    console.log(token.getValue())
+    console.log(token.getType())
+}
 
-var it1 = new PeekIterator(arrayToGenerator([..."if abc"]))
-var it2 = new PeekIterator(arrayToGenerator([..."true abc"]))
+const source = "(a+b)^100.12==+100-20"
+const lexer = new Lexer()
+const tokens = lexer.analyse(arrayToGenerator([...source]))
 
-var token1 = Token.makeVarOrKeyword(it1)
-var token2 = Token.makeVarOrKeyword(it2)
-it1.next() // Read spaces in the stream
-var token3 = Token.makeVarOrKeyword(it1)
+console.log(tokens.length)
 
-console.log(token1)
+assertToken(tokens[0])
+assertToken(tokens[1])
+assertToken(tokens[2])
