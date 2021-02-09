@@ -5,7 +5,7 @@ class Factor extends ASTNode {
     constructor(token) {
         super()
         this.lexeme = token
-        this.label = token.getValue() // label: information displayed to users
+        this.label = token.getValue()
     }
 }
 
