@@ -6,8 +6,9 @@ class PeekTokenIterator extends PeekIterator {
         super(it)
     }
 
+    // match the value
     nextMatch(value) {
-        const token = this.next()
+        const token = this.next() // method in the parent class
 
         if (token.getValue() !== value) {
             throw ParseException.fromToken(token)
@@ -15,7 +16,8 @@ class PeekTokenIterator extends PeekIterator {
 
         return token
     }
-
+    
+    // match the type
     nextMatch_(type) {
         const token = this.next()
 

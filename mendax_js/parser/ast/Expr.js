@@ -66,7 +66,7 @@ Expr.E_ = (it, k) => {
         )
         return expr
     }
-    
+
     return null
 }
 
@@ -122,7 +122,7 @@ Expr.combine = (it, funcA, funcB) => {
     }
 
     const expr = Expr.fromToken(ASTNodeTypes.BINARY_EXPR, b.lexeme)
-   
+
     expr.addChild(a)
     expr.addChild(b.getChild(0))
 
@@ -139,6 +139,6 @@ Expr.race = (it, funcA, funcB) => {
     if (a == null) {
         return funcB()
     }
-    
+
     return a
 }

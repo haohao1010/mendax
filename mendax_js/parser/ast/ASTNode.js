@@ -50,8 +50,8 @@ class ASTNode {
     }
 
     print(indent = 0) {
-        console.log(`${"".padStart(indent * 2, " ")}${this.label}`)
-        this.children.forEach((x) => x.print(indent + 1))
+        console.log(`${"".padStart(indent * 3, " ")}${this.label}`)
+        this.children.forEach((x) => x.print(indent + 3))
     }
 
     setProp(key, value) {

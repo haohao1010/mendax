@@ -2,7 +2,8 @@ const Factor = require("../ast/Factor")
 const ASTNodeTypes = require("../ast/ASTNodeTypes")
 const LinkedList = require("linkedlist")
 
-class ParserUtils {
+class ParserUtils { 
+    // left right op
     static toPostfixExpression(node) {
         if (node instanceof Factor) {
             return node.getLexeme().getValue()
@@ -37,7 +38,7 @@ class ParserUtils {
                 queue.push(child)
             }
         }
-        
+
         return list.join(" ")
     }
 }

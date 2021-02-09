@@ -3,7 +3,7 @@ const Token = require("./Token")
 const TokenType = require("./TokenType")
 const AlphabetHelper = require("./AlphabetHelper")
 const LexicalException = require("./LexicalException")
-const arrayToGenerator = require("../common/arrayToGenerator")
+const ArrayToGenerator = require("../common/ArrayToGenerator")
 // const PeekTokenIterator = require("../parser/util/PeekTokenIterator")
 const fs = require("fs")
 
@@ -88,7 +88,7 @@ class Lexer {
     static fromFile(src) {
         const content = fs.readFileSync(src, "utf-8")
         const lexer = new Lexer()
-        return arrayToGenerator(lexer.analyse(arrayToGenerator(content)))
+        return ArrayToGenerator(lexer.analyse(ArrayToGenerator(content)))
     }
 }
 

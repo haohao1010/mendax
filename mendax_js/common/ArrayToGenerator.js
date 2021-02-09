@@ -1,7 +1,7 @@
-function* arrayToGenerator(arr) {
+function* ArrayToGenerator(arr) {
     for (let i = 0; i < arr.length; i++) {
         yield arr[i]
     }
 }
 
-module.exports = arrayToGenerator
+module.exports = ArrayToGenerator
